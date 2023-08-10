@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { styled } from 'styled-components'
+import { requestSignIn, requestSignUp } from '../api/request'
 
 const Form = () => {
   const { pathname } = useLocation()
+  const navigate = useNavigate()
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
   const [isComplete, setIsComplete] = useState({
     id: false,
     password: false,
@@ -15,19 +19,27 @@ const Form = () => {
   }, [isComplete])
 
   const emailCheck = (event) => {
-    setIsComplete(event.target.value.includes('@') ? { id: true, password: isComplete.password } : { id: false, password: isComplete.password })
+    setIsComplete(
+      event.target.value.includes('@')
+        ? { id: true, password: isComplete.password }
+        : { id: false, password: isComplete.password }
+    )
+    setEmail(event.target.value)
   }
 
   const passwordCheck = (event) => {
-    setIsComplete(event.target.value.length >= 8 ? { password: true, id: isComplete.id } : { password: false, id: isComplete.id })
+    setIsComplete(
+      event.target.value.length >= 8 ? { password: true, id: isComplete.id } : { password: false, id: isComplete.id }
+    )
+    setPassword(event.target.value)
   }
 
   const handleSubmit = (event) => {
     event.preventDefault()
     if (pathname === '/signup') {
-      //어쩌구
+      requestSignUp({ email, password }) && navigate('/signin')
     } else {
-      //어쩌구
+      requestSignIn({ email, password }) && navigate('/todo')
     }
   }
 
@@ -35,7 +47,13 @@ const Form = () => {
     <FormContainer onSubmit={(event) => handleSubmit(event)}>
       <div className="column">
         <span>아이디</span>
-        <input type="text" data-testid="email-input" placeholder='"@" 기호가 포함된 이메일을 입력해주세요' onChange={(event) => emailCheck(event)} required />
+        <input
+          type="text"
+          data-testid="email-input"
+          placeholder='"@" 기호가 포함된 이메일을 입력해주세요'
+          onChange={(event) => emailCheck(event)}
+          required
+        />
       </div>
       <div className="column">
         <span>비밀번호</span>
