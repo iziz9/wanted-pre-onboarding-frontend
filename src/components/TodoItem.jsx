@@ -1,16 +1,33 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { styled } from 'styled-components'
+import { requestUpdateTodo } from '../api/request'
 
-const TodoItem = () => {
+const TodoItem = ({ itemData }) => {
+  const [checked, setChecked] = useState(false)
+  const [content, setContent] = useState('')
+
+  useEffect(() => {
+    setChecked(itemData.isCompleted)
+    setContent(itemData.todo)
+  }, [itemData])
+
+  const handleCheckbox = (e) => {
+    console.log(checked) //안됨...
+    requestUpdateTodo({ id: itemData.id, todo: content, userId: itemData.userId, isCompleted: checked })
+  }
+
   return (
     <ItemContainer>
       <Inputs>
-        <input type="checkbox" />
-        <span>
-          {
-            '내용dsfadsfdasfadsfadsfnsdjlfndslfnldsknflkdsnflkdsnflkdsnflkdsnflkdsnflkdsnflkdsnglkfsbnglksdnflksdnmlknlknlknlk'
-          }
-        </span>
+        <input
+          type="checkbox"
+          checked={checked}
+          onChange={(e) => {
+            setChecked(e.target.checked)
+            handleCheckbox(e)
+          }}
+        />
+        <span>{itemData.todo}</span>
       </Inputs>
       <Buttons>
         <button data-testid="modify-button">수정</button>
@@ -33,12 +50,12 @@ const Inputs = styled.label`
 
   input[type='checkbox'] {
     position: relative;
-    margin: auto;
     transform: scale(1.2);
   }
 
   span {
     display: block;
+    margin: auto 0;
     padding: 10px 0;
     white-space: normal;
     overflow: scroll;

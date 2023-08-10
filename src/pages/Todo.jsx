@@ -1,14 +1,55 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import TodoList from '../components/TodoList'
-import NewTodo from '../components/NewTodo'
 import { styled } from 'styled-components'
+import { requestCreateTodo, requestDeleteTodo, requestGetTodo, requestUpdateTodo } from '../api/request'
 
 const Todo = () => {
+  const [inputValue, setInputValue] = useState('')
+  const [todoData, setTodoData] = useState([])
+  // { todo: '', userId: 0, id: 0, isComplete: false }
+
+  useEffect(() => {
+    const getTodoData = async () => {
+      setTodoData(await requestGetTodo())
+    }
+    getTodoData()
+  }, [])
+
+  const handleSubmit = async () => {
+    requestCreateTodo(inputValue)
+    setInputValue('')
+  }
+
+  const updateTodoItem = async () => {
+    requestUpdateTodo()
+  }
+
+  const deleteTodoItem = async () => {
+    requestDeleteTodo()
+  }
+
   return (
     <Container>
       <h1>투두리스트</h1>
-      <TodoList />
-      <NewTodo />
+      <TodoList data={todoData} />
+      <NewTodoForm
+        onSubmit={(e) => {
+          e.preventDefault()
+          handleSubmit()
+        }}
+      >
+        <input
+          type="text"
+          placeholder="새로운 할 일을 입력해주세요"
+          data-testid="new-todo-input"
+          required
+          onChange={(e) => {
+            setInputValue(e.target.value)
+          }}
+          value={inputValue}
+        />
+        <button data-testid="new-todo-add-button">추가</button>
+      </NewTodoForm>
     </Container>
   )
 }
@@ -25,6 +66,22 @@ const Container = styled.main`
 
   h1 {
     margin-top: 20px;
+  }
+`
+const NewTodoForm = styled.form`
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+
+  input {
+    width: 70%;
+  }
+
+  button {
+    width: 80px;
+    height: 40px;
   }
 `
 

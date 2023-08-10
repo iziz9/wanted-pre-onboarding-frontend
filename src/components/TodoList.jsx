@@ -2,19 +2,16 @@ import React, { useEffect } from 'react'
 import { styled } from 'styled-components'
 import TodoItem from './TodoItem'
 
-const TodoList = () => {
+const TodoList = ({ data }) => {
   useEffect(() => {
-    console.log('투두')
-  }, [])
+    console.log(data)
+  }, [data])
 
   return (
     <ListContainer>
-      <TodoItem />
-      <TodoItem />
-      <TodoItem />
-      <TodoItem />
-      <TodoItem />
-      <TodoItem />
+      {data.map((item) => {
+        return <TodoItem itemData={item} key={item.id} />
+      })}
     </ListContainer>
   )
 }
@@ -23,7 +20,7 @@ const ListContainer = styled.ul`
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
   width: 100%;
   height: 420px;
   overflow-x: hidden;
