@@ -12,10 +12,8 @@ const SignUp = () => {
 }
 
 const Container = styled.main`
-  max-width: 400px;
   height: 500px;
   background-color: aliceblue;
-  margin: 50px auto;
   display: flex;
   flex-direction: column;
   justify-content: center;

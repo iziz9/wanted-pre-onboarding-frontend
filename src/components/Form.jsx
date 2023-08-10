@@ -88,7 +88,6 @@ const FormContainer = styled.form`
 
   input {
     width: 300px;
-    height: 30px;
   }
 
   button {

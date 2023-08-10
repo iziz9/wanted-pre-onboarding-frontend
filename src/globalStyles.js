@@ -102,6 +102,19 @@ const GlobalStyles = createGlobalStyle`
     position: relative;
     color: #3a3a3a;
   }
+
+  main {
+    max-width: 400px;
+    margin: 50px auto;
+  }
+
+  input {
+    height: 40px;
+    border: 1px solid #aaa;
+    padding: 0 10px;
+    box-sizing: border-box;
+    border-radius: 8px;
+  }
 `
 
 export default GlobalStyles
