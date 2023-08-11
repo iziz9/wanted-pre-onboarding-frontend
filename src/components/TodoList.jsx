@@ -2,15 +2,15 @@ import React, { useEffect } from 'react'
 import { styled } from 'styled-components'
 import TodoItem from './TodoItem'
 
-const TodoList = ({ data }) => {
+const TodoList = ({ data, getTodoData }) => {
   useEffect(() => {
-    console.log(data)
+    // console.log(data)
   }, [data])
 
   return (
     <ListContainer>
       {data.map((item) => {
-        return <TodoItem itemData={item} key={item.id} />
+        return <TodoItem itemData={item} getTodoData={getTodoData} key={item.id} />
       })}
     </ListContainer>
   )

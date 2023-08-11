@@ -1,27 +1,29 @@
 import React, { useEffect, useState } from 'react'
 import { styled } from 'styled-components'
-import { requestDeleteTodo, requestUpdateTodo } from '../api/request'
+import { requestDeleteTodo, requestGetTodo, requestUpdateTodo } from '../api/request'
 
-const TodoItem = ({ itemData }) => {
+const TodoItem = ({ itemData, getTodoData }) => {
   const [content, setContent] = useState('')
   const [isModifying, setIsModifying] = useState(false)
 
   useEffect(() => {
-    itemData.todo && setContent(itemData.todo)
+    setContent(itemData.todo || '')
   }, [itemData])
 
-  const handleContentUpdate = () => {
-    requestUpdateTodo({
+  const handleContentUpdate = async () => {
+    await requestUpdateTodo({
       id: itemData.id,
       todo: content,
       userId: itemData.userId,
       isCompleted: itemData.isCompleted,
     })
     setIsModifying(false)
+    await getTodoData()
   }
 
-  const handleDelete = () => {
-    requestDeleteTodo(itemData.id)
+  const handleDelete = async () => {
+    await requestDeleteTodo(itemData.id)
+    await getTodoData()
   }
 
   const handleCheckComplete = (e) => {

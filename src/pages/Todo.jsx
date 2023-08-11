@@ -1,28 +1,29 @@
 import React, { useEffect, useState } from 'react'
 import TodoList from '../components/TodoList'
 import { styled } from 'styled-components'
-import { requestCreateTodo, requestDeleteTodo, requestGetTodo, requestUpdateTodo } from '../api/request'
+import { requestCreateTodo, requestGetTodo } from '../api/request'
 
 const Todo = () => {
   const [inputValue, setInputValue] = useState('')
   const [todoData, setTodoData] = useState([])
-  // { todo: '', userId: 0, id: 0, isComplete: false }
+
+  const getTodoData = async () => {
+    setTodoData(await requestGetTodo())
+  }
 
   useEffect(() => {
-    const getTodoData = async () => {
-      setTodoData(await requestGetTodo())
-    }
     getTodoData()
   }, [])
 
   const handleSubmit = async () => {
-    requestCreateTodo(inputValue)
+    await requestCreateTodo(inputValue)
+    await getTodoData()
     setInputValue('')
   }
   return (
     <Container>
       <h1>투두리스트</h1>
-      <TodoList data={todoData} />
+      <TodoList data={todoData} getTodoData={getTodoData} />
       <NewTodoForm
         onSubmit={(e) => {
           e.preventDefault()
