@@ -19,15 +19,6 @@ const Todo = () => {
     requestCreateTodo(inputValue)
     setInputValue('')
   }
-
-  const updateTodoItem = async () => {
-    requestUpdateTodo()
-  }
-
-  const deleteTodoItem = async () => {
-    requestDeleteTodo()
-  }
-
   return (
     <Container>
       <h1>투두리스트</h1>

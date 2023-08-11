@@ -1,38 +1,91 @@
 import React, { useEffect, useState } from 'react'
 import { styled } from 'styled-components'
-import { requestUpdateTodo } from '../api/request'
+import { requestDeleteTodo, requestUpdateTodo } from '../api/request'
 
 const TodoItem = ({ itemData }) => {
-  const [checked, setChecked] = useState(false)
   const [content, setContent] = useState('')
+  const [isModifying, setIsModifying] = useState(false)
 
   useEffect(() => {
-    setChecked(itemData.isCompleted)
-    setContent(itemData.todo)
+    itemData.todo && setContent(itemData.todo)
   }, [itemData])
 
-  const handleCheckbox = (e) => {
-    console.log(checked) //안됨...
-    requestUpdateTodo({ id: itemData.id, todo: content, userId: itemData.userId, isCompleted: checked })
+  const handleContentUpdate = () => {
+    requestUpdateTodo({
+      id: itemData.id,
+      todo: content,
+      userId: itemData.userId,
+      isCompleted: itemData.isCompleted,
+    })
+    setIsModifying(false)
+  }
+
+  const handleDelete = () => {
+    requestDeleteTodo(itemData.id)
+  }
+
+  const handleCheckComplete = (e) => {
+    requestUpdateTodo({
+      id: itemData.id,
+      todo: content,
+      userId: itemData.userId,
+      isCompleted: e.target.checked,
+    })
   }
 
   return (
     <ItemContainer>
-      <Inputs>
-        <input
-          type="checkbox"
-          checked={checked}
-          onChange={(e) => {
-            setChecked(e.target.checked)
-            handleCheckbox(e)
-          }}
-        />
-        <span>{itemData.todo}</span>
-      </Inputs>
-      <Buttons>
-        <button data-testid="modify-button">수정</button>
-        <button data-testid="delete-button">삭제</button>
-      </Buttons>
+      {isModifying ? (
+        <>
+          <Inputs>
+            <input
+              type="text"
+              value={content || ''}
+              data-testid="modify-input"
+              onChange={(e) => setContent(e.target.value)}
+            />
+          </Inputs>
+          <Buttons>
+            <button
+              data-testid="submit-button"
+              onClick={() => {
+                handleContentUpdate()
+              }}
+            >
+              제출
+            </button>
+            <button
+              data-testid="cancel-button"
+              onClick={() => {
+                setIsModifying(false)
+              }}
+            >
+              취소
+            </button>
+          </Buttons>
+        </>
+      ) : (
+        <>
+          <Inputs>
+            <input
+              type="checkbox"
+              defaultChecked={itemData.isCompleted}
+              onChange={(e) => {
+                handleCheckComplete(e)
+              }}
+            />
+            <span>{itemData.todo}</span>
+          </Inputs>
+          <Buttons>
+            <button data-testid="modify-button" onClick={() => setIsModifying(true)}>
+              수정
+            </button>
+            <button data-testid="delete-button" onClick={() => handleDelete()}>
+              삭제
+            </button>
+          </Buttons>
+        </>
+      )}
     </ItemContainer>
   )
 }
@@ -51,6 +104,9 @@ const Inputs = styled.label`
   input[type='checkbox'] {
     position: relative;
     transform: scale(1.2);
+  }
+
+  input[type='text'] {
   }
 
   span {

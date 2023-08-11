@@ -128,26 +128,18 @@ export const requestUpdateTodo = async ({ id, todo, isCompleted }) => {
   }
 }
 
-export const requestDeleteTodo = async (data) => {
-  try {
-    const res = await fetch(baseURL + '/todos/' + data.id, {
-      method: 'DELETE',
-      headers: {
-        'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),
-      },
-      body: JSON.stringify(data),
-    })
+export const requestDeleteTodo = async (id) => {
+  const res = await fetch(baseURL + '/todos/' + id, {
+    method: 'DELETE',
+    headers: {
+      'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),
+    },
+  })
 
-    if (!res.status === 204) {
-      const failResult = await res.json()
-      alert(failResult.message)
-      return false
-    }
-
-    const result = await res.json()
-    return result
-
-  } catch (err) {
-    alert('에러가 발생했습니다. 잠시 후 다시 시도해주세요.')
+  if (res.status === 204) {
+    alert('삭제가 완료되었습니다.')
+    return true
   }
+
+  alert('에러가 발생했습니다. 잠시 후 다시 시도해주세요.')
 }
