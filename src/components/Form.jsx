@@ -29,17 +29,19 @@ const Form = () => {
 
   const passwordCheck = (event) => {
     setIsComplete(
-      event.target.value.length >= 8 ? { password: true, id: isComplete.id } : { password: false, id: isComplete.id }
+      event.target.value.length >= 8
+        ? { password: true, id: isComplete.id }
+        : { password: false, id: isComplete.id }
     )
     setPassword(event.target.value)
   }
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault()
     if (pathname === '/signup') {
-      requestSignUp({ email, password }) && navigate('/signin')
+      ;(await requestSignUp({ email, password })) && navigate('/signin')
     } else {
-      requestSignIn({ email, password }) && navigate('/todo')
+      ;(await requestSignIn({ email, password })) && navigate('/todo')
     }
   }
 
