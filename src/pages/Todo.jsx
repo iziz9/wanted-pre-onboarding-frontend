@@ -16,7 +16,7 @@ const Todo = () => {
   }, [])
 
   const handleSubmit = async () => {
-    await requestCreateTodo(inputValue)
+    await requestCreateTodo({ todo: inputValue })
     await getTodoData()
     setInputValue('')
   }

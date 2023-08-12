@@ -3,15 +3,12 @@ import { styled } from 'styled-components'
 import TodoItem from './TodoItem'
 
 const TodoList = ({ data, getTodoData }) => {
-  useEffect(() => {
-    // console.log(data)
-  }, [data])
-
   return (
     <ListContainer>
-      {data.map((item) => {
-        return <TodoItem itemData={item} getTodoData={getTodoData} key={item.id} />
-      })}
+      {data &&
+        data.map((item) => {
+          return <TodoItem itemData={item} getTodoData={getTodoData} key={item.id} />
+        })}
     </ListContainer>
   )
 }
