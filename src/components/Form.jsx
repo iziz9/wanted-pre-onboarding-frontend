@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate, useOutletContext } from 'react-router-dom'
 import { styled } from 'styled-components'
 import { requestSignIn, requestSignUp } from '../api/request'
 
 const Form = () => {
+  const { setToken } = useOutletContext()
   const { pathname } = useLocation()
   const navigate = useNavigate()
   const [email, setEmail] = useState('')
@@ -41,7 +42,7 @@ const Form = () => {
     if (pathname === '/signup') {
       ;(await requestSignUp({ email, password })) && navigate('/signin')
     } else {
-      ;(await requestSignIn({ email, password })) && navigate('/todo')
+      ;(await requestSignIn({ email, password, setToken })) && navigate('/todo')
     }
   }
 

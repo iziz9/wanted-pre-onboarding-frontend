@@ -1,20 +1,37 @@
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { styled } from 'styled-components'
 
-
-const Header = () => {
+const Header = ({ token, setToken }) => {
   const navigate = useNavigate()
+
+  useEffect(() => {
+    setToken(localStorage.getItem('accessToken'))
+  }, [])
+
+  const logout = () => {
+    localStorage.setItem('accessToken', '')
+    setToken('')
+    alert('로그아웃 되었습니다.')
+    navigate('/')
+  }
 
   return (
     <Container>
       <Inner>
-        <button className='home' onClick={()=>navigate('/')}>
+        <button className="home" onClick={() => navigate('/')}>
           메인
         </button>
-        <div className='menu'>
-          <button onClick={()=>navigate('/signin')}>로그인</button>
-          <button onClick={() => navigate('/signup')}>회원가입</button>
-        </div>
+        {token ? (
+          <div className="menu">
+            <button onClick={() => logout()}>로그아웃</button>
+          </div>
+        ) : (
+          <div className="menu">
+            <button onClick={() => navigate('/signin')}>로그인</button>
+            <button onClick={() => navigate('/signup')}>회원가입</button>
+          </div>
+        )}
       </Inner>
     </Container>
   )

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { styled } from 'styled-components'
-import { requestDeleteTodo, requestGetTodo, requestUpdateTodo } from '../api/request'
+import { requestDeleteTodo, requestUpdateTodo } from '../api/request'
 
 const TodoItem = ({ itemData, getTodoData }) => {
   const [content, setContent] = useState('')
@@ -26,22 +26,24 @@ const TodoItem = ({ itemData, getTodoData }) => {
     await getTodoData()
   }
 
-  const handleCheckComplete = (e) => {
-    requestUpdateTodo({
+  const handleCheckComplete = async (e) => {
+    await requestUpdateTodo({
       id: itemData.id,
       todo: content,
       userId: itemData.userId,
       isCompleted: e.target.checked,
     })
+    await getTodoData()
   }
 
   return (
     <ItemContainer>
       {isModifying ? (
         <>
-          <Inputs>
+          <Inputs name="edit">
             <input
               type="text"
+              id="edit"
               value={content || ''}
               data-testid="modify-input"
               onChange={(e) => setContent(e.target.value)}
@@ -68,10 +70,11 @@ const TodoItem = ({ itemData, getTodoData }) => {
         </>
       ) : (
         <>
-          <Inputs>
+          <Inputs name="check">
             <input
               type="checkbox"
-              defaultChecked={itemData.isCompleted}
+              id="check"
+              checked={itemData.isCompleted}
               onChange={(e) => {
                 handleCheckComplete(e)
               }}

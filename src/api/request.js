@@ -25,14 +25,14 @@ export const requestSignUp = async (data) => {
   }
 }
 
-export const requestSignIn = async (data) => {
+export const requestSignIn = async ({ email, password, setToken }) => {
   try {
     const res = await fetch(baseURL + '/auth/signin', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(data),
+      body: JSON.stringify({ email, password }),
     })
 
     if (!res.ok) {
@@ -43,6 +43,7 @@ export const requestSignIn = async (data) => {
 
     const result = await res.json()
     localStorage.setItem('accessToken', result.access_token)
+    setToken(result.access_token)
     alert('로그인이 완료되었습니다.')
     return true
 
