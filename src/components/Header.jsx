@@ -1,13 +1,8 @@
-import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { styled } from 'styled-components'
 
 const Header = ({ token, setToken }) => {
   const navigate = useNavigate()
-
-  useEffect(() => {
-    setToken(localStorage.getItem('accessToken'))
-  }, [])
 
   const logout = () => {
     localStorage.setItem('accessToken', '')
